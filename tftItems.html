@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TFT - Items</title>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	var url = new URL(document.URL);
+	var name = url.searchParams.get("name");
+	var totItems = 0;
+	var CurrentItems = {
+		"BFS": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/4H4Jw2JmOzQstbD4kLsjWB/82564a032a154e900e4166a2e78603b7/bfsword.png",
+		"buildsInto": [
+      		"infinityedge",
+      		"hextechgunblade",
+      		"swordofthedivine",
+      		"spearofshojin",
+      		"guardianangel",
+     		"bloodthirster",
+     		"zekesherald",
+      		"youmuusghostblade"
+    	]},
+		"RCB": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/7Gt943T6XQsJlv2KmCsTa7/df48f18a5e4ae34a3fac903c70beeed4/recursivebow.png",
+		"buildsInto": [
+      		"swordofthedivine",
+      		"guinsoosrageblade",
+      		"rapidfirecannon",
+      		"statikkshiv",
+      		"phantomdancer",
+      		"cursedblade",
+      		"titanichydra",
+      		"bladeoftheruinedking"
+    	]},
+		"NLR": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/2nwmiWiIJ27kJj0NoVfRJ6/2ba1b0bf41eb29a6daebc916d663089b/needlesslylargerod.png",
+		"buildsInto": [
+      		"hextechgunblade",
+      		"rabadonsdeathcap",
+      		"guinsoosrageblade",
+      		"ludensecho",
+      		"locketoftheironsolari",
+      		"ionicspark",
+      		"morellonomicon",
+      		"yuumi"
+    	]},
+		"Tear": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/1ufIFBJ71ekEHoH5scTFI5/ddcd8391b1317200dcc424779003c3b8/tearofthegoddess.png",
+		"buildsInto": [
+      		"spearofshojin",
+      		"ludensecho",
+      		"statikkshiv",
+      		"seraphsembrace",
+      		"frozenheart",
+      		"hush",
+      		"redemption",
+      		"darkin"
+    	]},
+		"GB": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/2G9b0COARA3IUp7UuLeQnh/044adaaa80aebcb45591bffa7de38f49/giantsbelt.png",
+		"buildsInto": [
+      		"zekesherald",
+      		"morellonomicon",
+      		"titanichydra",
+      		"redemption",
+      		"redbuff",
+      		"zephyr",
+      		"warmogsarmor",
+      		"frozenmallet"
+    	]},
+		"CV": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/24e725imzzqNGVUZqpoWQG/1475640cf018711df4bcd5ffb29275e1/chainvest.png",
+		"buildsInto": [
+      		"guardianangel",
+      		"locketoftheironsolari",
+      		"phantomdancer",
+      		"frozenheart",
+      		"thornmail",
+      		"swordbreaker",
+      		"redbuff",
+      		"knightsvow"
+    	]},
+		"NC": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/1NKlHJsZAUe2xELEonLoQ5/29409e39862210b5d3aeb5719ed28de6/negatroncloak.png",
+		"buildsInto": [
+      		"bloodthirster",
+      		"ionicspark",
+      		"cursedblade",
+      		"hush",
+      		"swordbreaker",
+      		"dragonsclaw",
+      		"zephyr",
+      		"runaanshurricane"
+    	]},
+		"Spach": {"number": 0, "link": "https://images.ctfassets.net/xyxlcljfdyq1/1QI4puoWywj6UtuVXYXBJe/ad72e07142ead4aea2e3242647cd9dd7/spatula.png",
+		"buildsInto": [
+      		"youmuusghostblade",
+      		"yuumi",
+      		"bladeoftheruinedking",
+      		"darkin",
+     		"knightsvow",
+      		"runaanshurricane",
+      		"frozenmallet",
+      		"forceofnature"
+    	]}
+	}
+	var CreatableItems = {
+		"infinityedge": {"madeWith": ["BFS", "BFS"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2XDoH3WH1PM8rNvkoaO9a6/060f97ffece12bc0435ed6a0e6d249d5/infinityedge.png", "creatable" : false},
+		"hextechgunblade": {"madeWith": ["BFS", "NLR"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2VBFcmk18wKzeODXudRlPh/d02aa950aa17086fc03dbc117f75758a/hextechgunblade.png", "creatable" : false},
+		"swordofthedivine": {"madeWith": ["BFS", "RCB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/gHDmZqnCEMVhU3m3fQlZ4/8087c10d4c9fa9b143c95e1041b7c4fa/swordofthedivine.png", "creatable" : false},
+      	"spearofshojin": {"madeWith": ["BFS", "Tear"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/Dd1IHLozkFTbGVlXltjjg/03f56b28addef3348f43d65368e3e74a/spearofshojin.png", "creatable" : false},
+      	"guardianangel": {"madeWith": ["BFS", "CV"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/1VMCADG1W59epSnFsthU6J/c00cfa3b4548a8ca3ad6e9ec3c7e8df8/guardianangel.png", "creatable" : false},
+     	"bloodthirster": {"madeWith": ["BFS", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/MQZjEOQ8VlUqtsBexYBWw/01edd1e54a282e95bea18f4f514df88a/bloodthirster.png", "creatable" : false},
+     	"zekesherald": {"madeWith": ["BFS", "GB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/1PTMqL34IKcVvdRBc6uFTV/8b4f7236941cf9e5c8cf73969149dfb3/zekesherald.png", "creatable" : false},
+      	"youmuusghostblade": {"madeWith": ["BFS", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/4yAt16BSDD4ySeP3PGt2ro/4e28f15ec734e534e1a8234d84dcb9d8/youmuusghostblade.png", "creatable" : false},
+      	"guinsoosrageblade": {"madeWith": ["RCB", "NLR"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/3GiyF3zSZ6UbO62CxjOCCH/47d592dc2cff20d171d85f2b4aaf658d/guinsoosrageblade.png", "creatable" : false},
+      	"rapidfirecannon": {"madeWith": ["RCB", "RCB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/3RE9ubxtp4FrlEcAmvZi3C/85ba0948f6b9bdc72a00779f950b49b8/rapidfirecannon.png", "creatable" : false},
+      	"statikkshiv": {"madeWith": ["RCB", "Tear"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/7B3ihTsv8nwioIf4UpO05o/d8f122af5b695ca51e543137ff485ff2/statikkshiv.png", "creatable" : false},
+      	"phantomdancer": {"madeWith": ["RCB", "CV"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/5HYO8G4MWfGFQgHR0IDiAr/61563b0ca4e247b24c103479f6843c86/phantomdancer.png", "creatable" : false},
+      	"cursedblade": {"madeWith": ["RCB", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2ugSLQBOMDIiHI3GDLfICv/c8f9cde6c7e5ea36a8f4401da78b2961/cursedblade.png", "creatable" : false},
+      	"titanichydra": {"madeWith": ["RCB", "GB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/4Ij73TXYw8epIBwTzJ3va4/8cd0d00495da889df3e52dd693a41328/titanichydra.png", "creatable" : false},
+      	"bladeoftheruinedking": {"madeWith": ["RCB", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2dGig16Wl56aUtHmKN00GJ/ee5056fe0ac0ec0400a9694ef7f0be66/bladeoftheruinedking.png", "creatable" : false},
+      	"rabadonsdeathcap": {"madeWith": ["NLR", "NLR"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/6Usb3iWlcoF3ZwgBICUzY9/3c02bad1079dc9e120ba6a98e0c772ff/rabadonsdeathcap.png", "creatable" : false},
+      	"ludensecho": {"madeWith": ["NLR", "Tear"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/21oPppOS6Ak0Mv3TfDWOYF/7da27ef3343ec76989067eba3a0a1f05/ludensecho.png", "creatable" : false},
+      	"locketoftheironsolari": {"madeWith": ["NLR", "CV"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/75pmKg7bYE3n1o3EpWsFAQ/518fd7ed31c9c17ffaac411fa015df9f/locketoftheironsolari.png", "creatable" : false},
+      	"ionicspark": {"madeWith": ["NLR", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/3mjeXoAy4XMNX6x1NsiDjc/4dab4d1f0886cb3d52687fc760e2054f/ionicspark.png", "creatable" : false},
+      	"morellonomicon": {"madeWith": ["NLR", "GB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/4ApXxIYuJn9eiuRBgpeWD6/dd01e745da32538dc977e6a0e3913436/morellonomicon.png", "creatable" : false},
+      	"yuumi": {"madeWith": ["NLR", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/6b6gvpNi2ptXb7eFgLekDj/91ac3668f8f11d0d179cef030302dc3c/yuumi.png", "creatable" : false},
+      	"seraphsembrace": {"madeWith": ["Tear", "Tear"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/4GnjjdLypJWRmN4zZmv6mu/5aaa5b6e4ad09ac041baf0f13e593eb1/seraphsembrace.png", "creatable" : false},
+      	"frozenheart": {"madeWith": ["Tear", "CV"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/1Htd12Y3LudGr4Hz1MEYvd/701a3731c5bec7ccdb8267130ea419df/frozenheart.png", "creatable" : false},
+      	"hush": {"madeWith": ["Tear", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/7pdangkzNvnyu20gR31Afk/aff6d82fdbb54ccabfd67bb64eca4da1/hush.png", "creatable" : false},
+      	"redemption": {"madeWith": ["Tear", "GB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2k1AWKaXNwfwLqbrYRmbQq/9a4797d7fd8d7a18cde29a220f30baff/redemption.png", "creatable" : false},
+      	"darkin": {"madeWith": ["Tear", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/6VVp4PTjZux3Tm85z9BeXc/d4902cab50a96379931f1ee5c289c5a8/darkin.png", "creatable" : false},
+		"redbuff": {"madeWith": ["GB", "CV"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/70Zn8hZUWuou9MwP45nfaP/0a30f02e57a829fd698ba9c58fe941c6/redbuff.png", "creatable" : false},
+      	"zephyr": {"madeWith": ["GB", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/SXA2rtR5ZAFlIWnnfsarE/9aa2bee7be8b9ede0afad34a02b8aa20/zephyr.png", "creatable" : false},
+      	"warmogsarmor": {"madeWith": ["GB", "GB"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2pbp0IiawXSeOMeKD8Yjbe/1bb619d8afff485fc6a050e00d5c15a1/warmogsarmor.png", "creatable" : false},
+      	"frozenmallet": {"madeWith": ["GB", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/1Vr1lFudlVXwW0DyR3S54i/d6831c85699bcbb5ea291d90aaea7caf/frozenmallet.png", "creatable" : false},
+      	"thornmail": {"madeWith": ["CV", "CV"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/2wxnkFgpSmwsuCpLj1LeAB/6b9754924097f445f63718d7f1ecad65/thornmail.png", "creatable" : false},
+      	"swordbreaker": {"madeWith": ["CV", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/3zqK08gjrMDgSoBIFyZ9w7/e29d2dfa70efb5c0762afc5706c39bcb/swordbreaker.png", "creatable" : false},
+      	"knightsvow": {"madeWith": ["CV", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/7t0EPY0imJM7erzFmyc5R2/dd7996b8982532727aeb4e240f566991/knightsvow.png", "creatable" : false},
+      	"dragonsclaw": {"madeWith": ["NC", "NC"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/5fDO2l5Z4cdQWKmjxccBow/97cd7bd7827abab2b658f50af94eefb1/dragonsclaw.png", "creatable" : false},
+      	"runaanshurricane": {"madeWith": ["NC", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/6RHUkMwJlqq0BF9zw35tP2/e1239b58448e14a785b78f4a52b88f18/runaanshurricane.png", "creatable" : false},
+      	"forceofnature": {"madeWith": ["Spach", "Spach"], "link": "https://images.ctfassets.net/xyxlcljfdyq1/51SVywiE7wdzRJKLuoL875/4250e2853e1c64a1622abd36ee6c81f4/forceofnature.png", "creatable" : false}
+	}
+
+	function back(){
+		window.location.replace('/?name=' + `${name}`);
+	}
+
+	function find(){
+		const name = $('#IN').val();
+
+		var query_string = url.search;
+
+		var search_params = new URLSearchParams(query_string); 
+
+		// new value of "id" is set to "101"
+		search_params.set('name', $('#IN').val());
+
+		// change the search property of the main url
+		url.search = search_params.toString();
+
+		// the new url string
+		var new_url = url.toString();
+
+		// output : http://demourl.com/path?id=101&topic=main
+		window.location.replace(new_url);
+	}
+
+	//Press Enter To Search
+			$(document).ready(function(){
+    			$('#IN').keypress(function(e){
+      				if(e.keyCode==13)
+      					find();
+    			});
+			});
+
+	function pickItem(it){
+		CurrentItems[it]["number"] += 1;
+		totItems += 1;
+		
+		$("#Selected").append(`
+			<ol class="Basicitem ${it}" style="background-color: maroon; padding: 10px; display: inline-block;">
+				<img onClick="removeClass('${it}').then(refreshMakeable())" src="${CurrentItems[it]["link"]}">
+			</ol>
+			`);
+		refreshMakeable();
+		if(totItems === 1){
+			$("#have").text("You have:");
+		}
+		if(totItems === 2){
+			$("#cnMake").text("You can make:");
+		}
+
+		$(".Basicitem").css({	
+				"padding": "10px",
+				"margin-top": "6px",
+				"margin-left": "3px",
+				"margin-right": "3px",
+				"width": "64px"	
+				})
+			.mouseover(function(){
+				$( this ).css({	
+				"padding": "10px",
+				"margin-top": "0px",
+				"margin-left": "0px",
+				"margin-right": "0px",
+				"width": "70px"	
+				}).children("img").css({
+					"width": "70px"
+				});
+			})
+			.mouseout(function(){
+				$( this ).css({	
+				"padding": "10px",
+				"margin-top": "6px",
+				"margin-left": "3px",
+				"margin-right": "3px",
+				"width": "64px"	
+				}).children("img").css({
+					"width": "64px"
+				});
+			})
+	}
+
+	function refreshMakeable(){
+		//Empty the buildable div
+		$("#Buildable").empty();
+
+		var CrItems = Object.entries(CreatableItems);
+		//Set all items to false
+		for(const IT of CrItems){
+			IT[1]["creatable"] = false;
+		}
+		
+		var BasicItems = Object.entries(CurrentItems);
+
+		//Henter alle 8 Items fra listen
+		for(const BI of BasicItems){
+			//Sjekker om det finnes mer enn 0 av itemet. Om ikke hopper vi over.
+			if(BI[1].number >0){
+				
+				//Finner alle Items som kan lages av de vi har og setter de inn i en ny variabel.
+				var maybeBuildable = BI[1].buildsInto;
+
+				//Går gjennom alle Items som vi har minst en del av. Ser om vi har det vi trenger for dem.
+				for(const itemsWeHaveOnePartOf of maybeBuildable){
+					
+					
+					//navn på første del som trengs.
+					const Item1 = CreatableItems[itemsWeHaveOnePartOf]["madeWith"][0];
+					//console.log("Item1 = " + Item1);
+					//Navn på andre del. 
+					const Item2 = CreatableItems[itemsWeHaveOnePartOf]["madeWith"][1];
+					//console.log("Item2 = " + Item2);
+
+					//Hele denne for løkken er for å finne ut om vi har Riktige deler av items
+					//først fine riktig del av BasicItemsCopy (Den er satt opp am 8 arr på 2 i bredde den 1. delen må være lik testItems)
+					for(var i = 0; i<8; i++){
+						
+							//Ser om vi har possisjonen til item 1.
+							if(BasicItems[i][0] === Item1){
+								if(BasicItems[i][1]["number"]>0){
+									for(var y = 0; y<8; y++){
+									//Ser om vi har posisjonen til Item2
+									if(BasicItems[y][0] === Item2){
+										//console.log(BasicItems[y][0]);
+										//console.log("BIC1 = " + BasicItems[i][0] + "  Antall = " + BasicItems[i][1]["number"]);
+										//console.log("BIC2 = " + BasicItems[y][0] + "  Antall = " + BasicItems[y][1]["number"]);
+										if(BasicItems[y][1]["number"]>0 && (BasicItems[y][0]!=Item1 || BasicItems[y][1]["number"]>1)){
+											var ItemWeCanMake = itemsWeHaveOnePartOf;
+											CreatableItems[ItemWeCanMake]["creatable"] = true;
+										}
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		const CrAblItms = Object.entries(CreatableItems);
+		for(const CreatableItem of CrAblItms){
+			if(CreatableItem[1]["creatable"] === true){
+				$("#Buildable").append(`
+					<ol 
+					class="CreatableItemBox" 
+					id="${CreatableItem[0]}" 
+					onClick="buyItem('${CreatableItem[0]}')" 
+					style="background-color: maroon; padding: 10px; display: inline-block; padding-right: -30px;">
+						<img class="CrItemClass" src="${CreatableItem[1]["link"]}" style="width: 64px;">
+						<br>
+						<img src="${CurrentItems[CreatableItem[1]["madeWith"][0]]["link"]}" style="width: 30px;">
+						<img src="${CurrentItems[CreatableItem[1]["madeWith"][1]]["link"]}" style="width: 30px;">
+					</ol>
+					`);
+			}
+		}
+
+		$(".CreatableItemBox").css({	
+				"padding": "10px",
+				"margin-top": "6px",
+				"margin-left": "3px",
+				"margin-right": "3px",
+				"width": "64px"	
+				})
+			.mouseover(function(){
+				$( this ).css({	
+				"padding": "10px",
+				"margin-top": "0px",
+				"margin-left": "0px",
+				"margin-right": "0px",
+				"width": "70px"	
+				}).children(".CrItemClass").css({
+					"width": "70px"
+				});
+			})
+			.mouseout(function(){
+				$( this ).css({	
+				"padding": "10px",
+				"margin-top": "6px",
+				"margin-left": "3px",
+				"margin-right": "3px",
+				"width": "64px"	
+				}).children(".CrItemClass").css({
+					"width": "64px"
+				});
+			})
+	
+	}
+
+	function removeClass(Cl){
+		$('.'+Cl+":first").remove();
+		CurrentItems[Cl]["number"] -= 1;
+		totItems -= 1;
+		
+		refreshMakeable();
+
+		if(totItems === 0){
+			$("#have").text("");
+		}
+		if(totItems < 2){
+			$("#cnMake").text("");
+		}
+	}
+
+	function buyItem(It){
+		$(`#It`).remove();
+		removeClass(CreatableItems[It]["madeWith"][0]);
+		removeClass(CreatableItems[It]["madeWith"][1]);
+	}
+
+	
+</script>
+</head>
+<body style="background-color: MidnightBlue;">
+
+	<ol id="header" style="background-color: maroon; color: white; padding: 30px; text-align: center;">
+		<div id="seacher" style="display: inline-block; padding-right: 20px;">
+			<input type="text" name="TextInput" id="IN">
+			<button id="submitter" onclick="find()">Search</button>
+			<button onclick="back()">Front page</button>	
+		</div>
+		
+		<h1 style="display: inline-block; color: yellow;">Match History</h1>
+	</ol>
+
+	<div style="text-align: center; padding: 30px; background-color: DarkSlateBlue;">
+		<img class="I" id="BFS" src="https://images.ctfassets.net/xyxlcljfdyq1/4H4Jw2JmOzQstbD4kLsjWB/82564a032a154e900e4166a2e78603b7/bfsword.png">
+		<img class="I" id="RCB" src="https://images.ctfassets.net/xyxlcljfdyq1/7Gt943T6XQsJlv2KmCsTa7/df48f18a5e4ae34a3fac903c70beeed4/recursivebow.png">	
+		<img class="I" id="NLR" src="https://images.ctfassets.net/xyxlcljfdyq1/2nwmiWiIJ27kJj0NoVfRJ6/2ba1b0bf41eb29a6daebc916d663089b/needlesslylargerod.png">
+		<img class="I" id="Tear" src="https://images.ctfassets.net/xyxlcljfdyq1/1ufIFBJ71ekEHoH5scTFI5/ddcd8391b1317200dcc424779003c3b8/tearofthegoddess.png">
+		<img class="I" id="GB" src="https://images.ctfassets.net/xyxlcljfdyq1/2G9b0COARA3IUp7UuLeQnh/044adaaa80aebcb45591bffa7de38f49/giantsbelt.png">
+		<img class="I" id="CV" src="https://images.ctfassets.net/xyxlcljfdyq1/24e725imzzqNGVUZqpoWQG/1475640cf018711df4bcd5ffb29275e1/chainvest.png">
+		<img class="I" id="NC" src="https://images.ctfassets.net/xyxlcljfdyq1/1NKlHJsZAUe2xELEonLoQ5/29409e39862210b5d3aeb5719ed28de6/negatroncloak.png">
+		<img class="I" id="Spach" src="https://images.ctfassets.net/xyxlcljfdyq1/1QI4puoWywj6UtuVXYXBJe/ad72e07142ead4aea2e3242647cd9dd7/spatula.png">
+	</div>
+	<br>
+	<div style="text-align: center;">
+		<h1 id="have" style="color: yellow;"></h1>
+		<div id="Selected" style="text-align: center;">
+		
+		</div>
+		<br>
+		<h1 id="cnMake" style="color: yellow;"></h1>
+		<div id="Buildable" style="text-align: center;">
+		
+		</div>	
+	</div>
+	
+	
+	<script type="text/javascript">
+
+		$(".I")
+			.css({	
+				"padding-top": "3px",
+				"padding-bottom": "3px",
+				"padding-left": "3px",
+				"padding-right": "3px"	
+				})
+			.mouseover(function(){
+				$( this ).css({	
+				"padding-top": "0px",
+				"padding-bottom": "0px",
+				"padding-left": "0px",
+				"padding-right": "0px",
+				"width": "70px"	
+				})
+			})
+			.mouseout(function(){
+				$( this ).css({	
+				"padding-top": "3px",
+				"padding-bottom": "3px",
+				"width": "64px",
+				"padding-left": "3px",
+				"padding-right": "3px"
+				})
+			}).click(function(){
+				pickItem(this.id);
+			});		
+
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

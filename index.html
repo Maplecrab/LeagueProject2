@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+    ></script>
+    <script type="text/javascript">
+      const key = "RGAPI-23e4187e-8d1e-48a7-936c-e28ed200600d";
+
+      var name = "{{ name }}";
+      console.log(name);
+
+      var url = new URL(document.URL);
+      var name = url.searchParams.get("name");
+
+      //Load Page
+      const link =
+        "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" +
+        name +
+        "?api_key=" +
+        key;
+      console.log(link);
+
+      $.ajax({
+        url: link,
+        success: data => {
+          console.log(data);
+
+          if ((data.name /= null)) {
+            $("#Name").text(`${data.name}`);
+          }
+
+          $("#Name").text(`${name}`);
+          $("p").text("level: " + data.summonerLevel);
+
+          $("#MatchHistory").text("Match History");
+          $("#MatchHistory").attr(
+            "onclick",
+            "location.href='http://localhost:8080/MatchHistory/" +
+              `?name=${name}&gameNr=0'`
+          );
+
+          //"https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + `${data.accountId}` +"?api_key=" + `${key}`
+
+          $("#sumIcon").attr(
+            "src",
+            "//ddragon.leagueoflegends.com/cdn/9.13.1/img/profileicon/" +
+              data.profileIconId +
+              ".png"
+          );
+        }
+      });
+
+      //Press Enter To Search
+      $(document).ready(function() {
+        $("#IN").keypress(function(e) {
+          if (e.keyCode == 13) find();
+        });
+      });
+
+      //Method for finding Summoner info
+      function find() {
+        const name = $("#IN").val();
+
+        var query_string = url.search;
+
+        var search_params = new URLSearchParams(query_string);
+
+        // new value of "name" is set to the #IN value
+        search_params.set("name", $("#IN").val());
+
+        // change the search property of the main url
+        url.search = search_params.toString();
+
+        // the new url string
+        var new_url = url.toString();
+
+        // output : http://demourl.com/path?id=101&topic=main
+        window.location.replace(new_url);
+      }
+
+      function tft() {
+        var tftQString = url.origin + "/tftItems" + "?name=" + name;
+        window.location.replace(tftQString);
+      }
+    </script>
+  </head>
+  <body style="background-color: MidnightBlue;">
+    <ol
+      id="header"
+      style="background-color: maroon; color: white; padding: 30px; text-align: center;"
+    >
+      <div id="seacher" style="display: inline-block; padding-right: 20px;">
+        <input type="text" name="TextInput" id="IN" />
+        <button id="submitter" onclick="find()">Search</button>
+        <button onclick="back()">Front page</button>
+      </div>
+
+      <h1 style="display: inline-block; color: yellow;">Summoner Searcher</h1>
+    </ol>
+
+    <ol style=" text-align: center; margin-left: 40%; margin-right: 40%">
+      <h1 id="Name" style="color: yellow;">Hei</h1>
+      <img id="sumIcon" src="" style="width: 100%;" />
+      <p id="lvl" style="color: yellow;"></p>
+      <h1
+        id="MatchHistory"
+        class="butt"
+        style="background-color: yellow; color: MidnightBlue;"
+      >
+        Match History
+      </h1>
+
+      <h1
+        id="TFT"
+        class="butt"
+        onClick="tft()"
+        style="background-color: yellow; color: MidnightBlue;"
+      >
+        TFT Items
+      </h1>
+    </ol>
+
+    <script type="text/javascript">
+      $(".butt")
+        .css({
+          "padding-left": "0px",
+          "padding-right": "0px",
+          "margin-left": "10px",
+          "margin-right": "10px"
+        })
+        .mouseover(function() {
+          $(this).css({
+            "padding-left": "3px",
+            "padding-right": "3px",
+            "margin-left": "7px",
+            "margin-right": "7px",
+            "background-color": "maroon",
+            color: "yellow"
+          });
+        })
+        .mouseout(function() {
+          $(this).css({
+            "padding-left": "0px",
+            "padding-right": "0px",
+            "margin-left": "10px",
+            "margin-right": "10px",
+            "background-color": "yellow",
+            color: "MidnightBlue"
+          });
+        });
+    </script>
+  </body>
+</html>

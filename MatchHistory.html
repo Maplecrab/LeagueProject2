@@ -1,0 +1,201 @@
+<html>
+	<head>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+const key = "RGAPI-23e4187e-8d1e-48a7-936c-e28ed200600d"
+var url = new URL(document.URL);
+var name = url.searchParams.get("name");
+var gameNr = url.searchParams.get("gameNr");
+var id; //url.searchParams.get("id");
+
+$(document).ready(function(){
+	$("#summonerName").text(name);
+	$("#GamesAgo").text(`You have played ${gameNr} games since this one`);
+})
+
+$.ajax({url: 'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + `${name}` +'?api_key='+ `${key}`, success: data=> {
+	id = data.accountId;
+	console.log(data);
+	loader();
+	loadButtons();
+}})
+
+
+function loader(){
+
+	var link = "https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + `${id}` +"?api_key=" + `${key}`;
+	$.ajax({url: link, success: data=> {
+		var champNr = data.matches[0].champion;
+		var MatchLink = "https://euw1.api.riotgames.com/lol/match/v4/matches/"+ data.matches[gameNr].gameId + "?api_key=" + key;
+		$.ajax({url: MatchLink, success: MatchData=> {
+			console.log(MatchData);
+			$.each(MatchData.participantIdentities, function(index, value){
+				var sumGameLink = "https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + `${value.player.currentAccountId}` 					  +"?api_key=" + `${key}`;
+				console.log(value);
+				$.ajax({url: sumGameLink, success: companionMatches=> {
+					$.each(companionMatches.matches, function(ind, compMatch){
+						if(compMatch.gameId == MatchData.gameId){
+							let Champs = "http://ddragon.leagueoflegends.com/cdn/9.13.1/data/en_US/champion.json"
+
+							$.ajax({url: Champs, success: ChampionJson=> {
+								$.each(ChampionJson.data, function(index, champVal){
+									if(champVal.key === `${compMatch.champion}`) {
+												
+										//Setter Summoners på riktig team(ol) og finner champ bilde.
+										if(parseInt(value.participantId)<6){
+											$("#Team1").append(`<li>${value.player.summonerName}: </li> <img height="40" width="40" src="http://ddragon.leagueoflegends.com/cdn/9.13.1/img/champion/${champVal.id}.png"><br>`);
+										} else {
+											$("#Team2").append(`<li>${value.player.summonerName}: </li> <img height="40" width="40" src="http://ddragon.leagueoflegends.com/cdn/9.13.1/img/champion/${champVal.id}.png"><br>`);
+
+											if (`${(value.player.summonerName.replace(/\s/g,''))}` == name) {
+												$("#Team1").css("background-color", "maroon");
+												$("#Team1").css("color", "pink");
+												$("#Team2").css("background-color", "blue");
+												$("#Team2").css("color", "cyan");
+											}
+										}
+
+										if (`${(value.player.summonerName.replace(/\s/g,''))}` == name) {
+											$("li:last").css("color", "yellow");
+
+
+											if(value.participantId < 6 && MatchData.teams[0].win == "Win"){
+												$("#gameStatus").text("WIN!");
+												$("#gameStatus").css("color", "cyan");
+											}else if(value.participantId < 6 && MatchData.teams[0].win == "Fail"){
+												$("#gameStatus").text("Loss :(");
+												$("#gameStatus").css("color", "maroon");
+											}else if(value.participantId >= 6 && MatchData.teams[1].win == "Win") {
+												$("#gameStatus").text("WIN!");
+												$("#gameStatus").css("color", "cyan");
+											}else{
+												$("#gameStatus").text("Loss :(");
+												$("#gameStatus").css("color", "red");
+											}
+										}
+										return false;
+									}
+								})
+							}})
+							return false;
+						}
+					})
+				}})
+			})
+		}})
+
+		$.ajax({url: 'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + name +'?api_key='+key, success: data=> {
+			$("#sumIcon").attr("src","//ddragon.leagueoflegends.com/cdn/9.13.1/img/profileicon/" + data.profileIconId + ".png");
+			}})
+	}})
+}
+
+$(document).ready(function(){
+    $('#IN').keypress(function(e){
+      	if(e.keyCode==13) find();
+    });
+});
+
+function find(){
+	const name = $('#IN').val();
+
+	var query_string = url.search;
+
+	var search_params = new URLSearchParams(query_string); 
+
+	// new value of "id" is set to "101"
+	search_params.set('name', $('#IN').val());
+
+	// change the search property of the main url
+	url.search = search_params.toString();
+
+	// the new url string
+	var new_url = url.toString();
+
+	// output : http://demourl.com/path?id=101&topic=main
+	window.location.replace(new_url);
+}
+
+function back(){
+	window.location.replace('/?name=' + `${name}`);
+}
+			
+function loadButtons(){
+	var j = 1;
+
+	//This game
+	$("#currentPage").text(`   ${Number(gameNr)+Number(1)}`);
+	$("#currentPage").attr("style", "color: red;");
+	//Newer games
+	while(j<6){
+		if ((Number(gameNr)-Number(j)>=0)) {
+			var gNr = Number(gameNr)-Number(j);
+			$("#currentPage").prepend(`<a class="pageRouter" style="color: blue; padding: 10px; text-align: center;" href="/MatchHistory/?name=${name}&gameNr=${(Number(gNr)-Number(1))}">   ${(Number(gNr)+Number(1))}</a><br>`);
+			//$("#currentPage").append(`<a href="/MatchHistory/?name=${name}&gameNr=${gNr2}">   ${(Number(gNr2)+Number(1))}</a>`)
+			j = j+1;
+		} else{
+			j = j+1;
+		}
+	}
+	i=1;
+	//Older games
+	while(i<6){
+		var gNr2 = Number(gameNr)+Number(i);
+		$("#currentPage").append(`<br><a class="pageRouter" style="color: blue; padding: 10px; text-align: center;" href="/MatchHistory/?name=${name}&gameNr=${(Number(gNr2)-Number(1))}">   ${(Number(gNr2)+Number(1))}</a>`);
+		i = i+1;
+	}
+}
+
+</script>
+
+	</head>
+	<body style="background-color: MidnightBlue;>
+		<div id="body">
+
+		<ol id="header" style="background-color: maroon; color: white; padding: 30px; text-align: center;">
+			<div id="seacher" style="display: inline-block; padding-right: 20px;">
+				<input type="text" name="TextInput" id="IN">
+				<button id="submitter" onclick="find()">Search</button>
+				<button onclick="back()">Front page</button>	
+			</div>
+				
+			<h1 style="display: inline-block; color: yellow;">Match History</h1>
+		</ol>
+
+		<div id="content" style="display: flex; padding: 20px;">
+			<ol id="Summoner" style="background-color: maroon; padding: 20px;">
+				<h1 id="summonerName" style="color: yellow;"></h1>
+				<h3 id="GamesAgo" style="color: yellow;"></h2>
+				<img id="sumIcon" src="" width="200" height="200">
+			</ol>
+			<ol id="GameInfo" style="flex: 1; background-color: DarkSlateBlue; padding: 15px; display: flex;">
+				<ol style="width: 100px; padding: 20px;">
+					<h2 id="gameStatus" style=" margin-top: 100%;"></h2>
+				</ol> <br>
+				<ol id="Team1" style="color: cyan; background-color: blue; display: inline-block; padding-top: 10px; padding-bottom: 10px; width: 150px;">
+					
+				</ol>
+				<ol id="Team2" style="color: pink; background-color: brown; display: inline-block; padding-top: 10px; padding-bottom: 10px; width: 150px;">
+					
+				</ol>
+				<div id="pages" style=" flex: 1; padding: 10px;">
+					<a href="" id="currentPage" class="pageRouter" style=" text-align: center;"></a>		
+				</div>
+				
+			</ol>
+		</div>	
+
+		</div>
+		
+		
+		
+	
+	
+
+		<script type="text/javascript">
+			
+
+		</script>
+	</body>
+</html>
